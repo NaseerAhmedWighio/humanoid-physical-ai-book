@@ -10,6 +10,14 @@ description: "Task list template for feature implementation"
 
 **Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
 
+**Constitution Compliance**: All tasks must align with Physical AI & Humanoid Robotics Textbook Constitution:
+- Real-World Applications Focus: Tasks must implement features with clear real-world application in human environments
+- Modular & Scalable Structure: Tasks must support 13-week course modularity
+- Hands-On Interactive Learning: Tasks must include Python/ROS 2 code examples and simulation tutorials
+- Ethical AI Integration: Tasks must address ethical considerations for human-robot interaction safety
+- High-Quality Standards: Tasks must include detailed explanations, visual aids, exercises, and academic references
+- Digital-Physical Bridge: Tasks must connect digital AI concepts to physical robot behaviors
+
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
 ## Format: `[ID] [P?] [Story] Description`

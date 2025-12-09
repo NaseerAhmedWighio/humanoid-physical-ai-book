@@ -107,6 +107,16 @@
   These must be technology-agnostic and measurable.
 -->
 
+## Constitution Alignment Check
+
+Verify that this specification aligns with Physical AI & Humanoid Robotics Textbook Constitution:
+- Real-World Applications Focus: Features must have clear real-world application in human environments
+- Modular & Scalable Structure: Specification must support 13-week course modularity
+- Hands-On Interactive Learning: All features must include Python/ROS 2 code examples and simulation tutorials
+- Ethical AI Integration: Ethical considerations must be addressed for human-robot interaction safety
+- High-Quality Standards: Features must include detailed explanations, visual aids, exercises, and academic references
+- Digital-Physical Bridge: Specification must connect digital AI concepts to physical robot behaviors
+
 ### Measurable Outcomes
 
 - **SC-001**: [Measurable metric, e.g., "Users can complete account creation in under 2 minutes"]
