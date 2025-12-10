@@ -51,19 +51,6 @@ const config = {
 
 
 
-  themes: [
-    [
-      require.resolve("@easyops-cn/docusaurus-search-local"),
-      /** @type {import("@easyops-cn/docusaurus-search-local").PluginOptions} */
-      ({
-        // ... your options
-        hashed: true,
-        // For Docs using Chinese, The `language` is recommended to be 'zh'
-        language: ["en", "zh"],
-        // ... other options
-      }),
-    ],
-  ],
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
