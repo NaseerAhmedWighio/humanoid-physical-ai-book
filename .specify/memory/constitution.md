@@ -1,55 +1,47 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!-- SYNC IMPACT REPORT
+Version change: N/A → 1.0.0
+Added sections: All principles and sections for Physical AI & Humanoid Robotics textbook
+Removed sections: None
+Modified principles: N/A (new constitution)
+Templates requiring updates:
+- ✅ .specify/templates/plan-template.md (Constitution Check section)
+- ✅ .specify/templates/spec-template.md (scope/requirements alignment)
+- ⚠️ Pending: README.md or other runtime guidance docs
+Follow-up TODOs: None
+-->
+
+# Physical AI & Humanoid Robotics Textbook Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### Real-World Applications Focus
+All content must focus on real-world applications where humanoid robots interact in human environments (e.g., healthcare, manufacturing, service industries). Theoretical concepts must be grounded in practical implementation scenarios that demonstrate tangible value in human-robot interaction contexts.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### Modular & Scalable Structure
+All content must be modular and scalable for a 13-week course structure. Each module must be independently consumable while building cohesively toward comprehensive understanding. Content must support different learning paces and allow for customization based on institutional needs.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### Hands-On Interactive Learning
+All theoretical content must be paired with hands-on interactivity through Python code examples, ROS 2 snippets, simulation tutorials in Gazebo/Unity, and NVIDIA Isaac workflows. Every concept must have practical implementation examples that readers can execute and modify.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### Ethical AI Integration
+Ethical AI discussions must be integrated throughout all content, prioritizing safety in human-robot interactions and bias in perception systems. Every technical chapter must include ethical considerations and responsible AI practices.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### High-Quality Standards
+All content must meet high-quality standards with detailed explanations (at least 2000 words per major section), visual aids (Mermaid diagrams for architectures, PlantUML for robot models), quizzes/exercises at the end of each subsection, real-world case studies (e.g., Boston Dynamics Atlas robot applications), and references to academic papers/IEEE standards.
 
-### [PRINCIPLE_6_NAME]
+### Digital-Physical Bridge
+Content must emphasize the bridge between digital AI agents and physical embodied intelligence, demonstrating how abstract AI concepts translate to physical robot behaviors and real-world interactions.
 
+## Technical Requirements
 
-[PRINCIPLE__DESCRIPTION]
+Technology stack requirements: Python 3.8+, ROS 2 Humble Hawksbill, Gazebo Harmonic, Unity 2022.3 LTS, NVIDIA Isaac Sim. All code examples must be compatible with these platforms. Hardware requirements: Content must be applicable to both simulation and physical robot platforms including but not limited to humanoid platforms like NAO, Pepper, Atlas, and custom builds. Compliance standards: All content must adhere to IEEE standards for robotics and AI safety protocols.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Development & Review Process
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
-
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+Content development workflow: Each section requires technical review by domain experts, code review for all implementation examples, and pedagogical review for educational effectiveness. Quality gates: All content must pass unit testing of code examples, integration testing in simulation environments, and peer review validation. Deployment approval: Content must be validated in educational settings before final publication.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other practices and guidelines for the Physical AI & Humanoid Robotics textbook project. All PRs/reviews must verify compliance with these principles. Amendments to this constitution require documentation of rationale, approval by the editorial board, and a migration plan for existing content. Complexity must be justified with clear educational value. Use the textbook development guidelines for runtime development guidance.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2025-12-09 | **Last Amended**: 2025-12-09

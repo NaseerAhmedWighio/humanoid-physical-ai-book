@@ -1,0 +1,622 @@
+openapi: 3.0.0
+info:
+  title: Physical AI & Humanoid Robotics Textbook - User Progress API
+  description: API for tracking and managing user progress through the course
+  version: 1.0.0
+servers:
+  - url: https://api.textbook.example.com/v1
+    description: Production server
+  - url: https://staging-api.textbook.example.com/v1
+    description: Staging server
+
+paths:
+  /users/me:
+    get:
+      summary: Get current user profile
+      description: Retrieve the profile of the currently authenticated user
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /users/{user_id}/progress:
+    get:
+      summary: Get user progress
+      description: Retrieve overall progress for a specific user
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Unique identifier of the user
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User progress summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProgressSummary'
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+
+  /users/{user_id}/progress/modules:
+    get:
+      summary: Get user progress by modules
+      description: Retrieve detailed progress for each module
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Unique identifier of the user
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User progress by modules
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  modules_progress:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ModuleProgress'
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+
+  /users/{user_id}/progress/weeks:
+    get:
+      summary: Get user progress by weeks
+      description: Retrieve detailed progress for each week
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Unique identifier of the user
+          schema:
+            type: string
+        - name: module_id
+          in: query
+          description: Filter by specific module
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User progress by weeks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  weeks_progress:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WeeklyProgress'
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+
+  /users/{user_id}/progress/exercises:
+    get:
+      summary: Get user exercise progress
+      description: Retrieve progress on exercises
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Unique identifier of the user
+          schema:
+            type: string
+        - name: module_id
+          in: query
+          description: Filter by specific module
+          required: false
+          schema:
+            type: string
+        - name: week_id
+          in: query
+          description: Filter by specific week
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filter by status
+          required: false
+          schema:
+            type: string
+            enum: [not_started, in_progress, completed]
+      responses:
+        '200':
+          description: User exercise progress
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exercises_progress:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ExerciseProgress'
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+
+  /users/{user_id}/progress/exercises/{exercise_id}:
+    post:
+      summary: Update exercise progress
+      description: Update progress for a specific exercise
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Unique identifier of the user
+          schema:
+            type: string
+        - name: exercise_id
+          in: path
+          required: true
+          description: Unique identifier of the exercise
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [not_started, in_progress, completed]
+                  description: New status for the exercise
+                score:
+                  type: number
+                  description: Score for the exercise (0.0-100.0)
+                attempts_count:
+                  type: integer
+                  description: Number of attempts
+                time_spent_seconds:
+                  type: integer
+                  description: Time spent on the exercise in seconds
+      responses:
+        '200':
+          description: Exercise progress updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseProgress'
+        '400':
+          description: Invalid progress update
+        '404':
+          description: User or exercise not found
+        '500':
+          description: Internal server error
+
+  /users/{user_id}/progress/modules/{module_id}:
+    post:
+      summary: Update module progress
+      description: Update progress for a specific module
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Unique identifier of the user
+          schema:
+            type: string
+        - name: module_id
+          in: path
+          required: true
+          description: Unique identifier of the module
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                progress_percentage:
+                  type: number
+                  description: Progress percentage for the module (0.0-100.0)
+                current_week:
+                  type: integer
+                  description: Current week in the module
+                completed_weeks:
+                  type: array
+                  items:
+                    type: integer
+                  description: List of completed week numbers
+                time_spent_seconds:
+                  type: integer
+                  description: Total time spent on the module in seconds
+      responses:
+        '200':
+          description: Module progress updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModuleProgress'
+        '400':
+          description: Invalid progress update
+        '404':
+          description: User or module not found
+        '500':
+          description: Internal server error
+
+  /users/{user_id}/progress/certificates:
+    get:
+      summary: Get user certificates
+      description: Retrieve certificates earned by the user
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Unique identifier of the user
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User certificates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  certificates:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Certificate'
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+
+  /users/{user_id}/progress/assessments:
+    get:
+      summary: Get user assessment progress
+      description: Retrieve progress on assessment projects
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: Unique identifier of the user
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User assessment progress
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  assessments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AssessmentProgress'
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - name
+        - enrollment_date
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the user
+        email:
+          type: string
+          format: email
+          description: User's email address
+        name:
+          type: string
+          description: User's full name
+        student_id:
+          type: string
+          description: Student ID for institutional tracking
+        enrollment_date:
+          type: string
+          format: date-time
+          description: When the user enrolled
+        current_module:
+          type: string
+          description: ID of the module the user is currently studying
+        current_week:
+          type: integer
+          description: Current week number the user is studying
+        total_progress:
+          type: number
+          description: Overall progress percentage (0.0-100.0)
+        created_at:
+          type: string
+          format: date-time
+          description: Account creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    UserProgressSummary:
+      type: object
+      required:
+        - user_id
+        - total_progress
+        - modules_progress
+        - exercises_completed
+        - time_spent
+      properties:
+        user_id:
+          type: string
+          description: Unique identifier for the user
+        total_progress:
+          type: number
+          description: Overall progress percentage (0.0-100.0)
+        modules_progress:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModuleProgress'
+          description: Progress for each module
+        exercises_completed:
+          type: integer
+          description: Number of exercises completed
+        exercises_total:
+          type: integer
+          description: Total number of exercises
+        quizzes_completed:
+          type: integer
+          description: Number of quizzes completed
+        time_spent:
+          type: integer
+          description: Total time spent in seconds
+        last_accessed:
+          type: string
+          format: date-time
+          description: When the user last accessed the course
+        estimated_completion_date:
+          type: string
+          format: date
+          description: Estimated date of course completion
+
+    ModuleProgress:
+      type: object
+      required:
+        - module_id
+        - module_number
+        - title
+        - progress_percentage
+        - status
+      properties:
+        module_id:
+          type: string
+          description: Unique identifier for the module
+        module_number:
+          type: integer
+          description: Module number (1-4)
+        title:
+          type: string
+          description: Title of the module
+        progress_percentage:
+          type: number
+          description: Progress percentage (0.0-100.0)
+        status:
+          type: string
+          enum: [not_started, in_progress, completed]
+          description: Current status of the module
+        completed_weeks:
+          type: integer
+          description: Number of completed weeks
+        total_weeks:
+          type: integer
+          description: Total number of weeks in the module
+        exercises_completed:
+          type: integer
+          description: Number of exercises completed in this module
+        exercises_total:
+          type: integer
+          description: Total number of exercises in this module
+        time_spent_seconds:
+          type: integer
+          description: Time spent on this module in seconds
+        started_at:
+          type: string
+          format: date-time
+          description: When the user started this module
+        completed_at:
+          type: string
+          format: date-time
+          description: When the user completed this module
+
+    WeeklyProgress:
+      type: object
+      required:
+        - week_id
+        - week_number
+        - title
+        - module_id
+        - progress_percentage
+        - status
+      properties:
+        week_id:
+          type: string
+          description: Unique identifier for the week
+        week_number:
+          type: integer
+          description: Week number (1-13)
+        title:
+          type: string
+          description: Title of the week
+        module_id:
+          type: string
+          description: ID of the parent module
+        progress_percentage:
+          type: number
+          description: Progress percentage (0.0-100.0)
+        status:
+          type: string
+          enum: [not_started, in_progress, completed]
+          description: Current status of the week
+        exercises_completed:
+          type: integer
+          description: Number of exercises completed in this week
+        exercises_total:
+          type: integer
+          description: Total number of exercises in this week
+        time_spent_seconds:
+          type: integer
+          description: Time spent on this week in seconds
+        started_at:
+          type: string
+          format: date-time
+          description: When the user started this week
+        completed_at:
+          type: string
+          format: date-time
+          description: When the user completed this week
+
+    ExerciseProgress:
+      type: object
+      required:
+        - exercise_id
+        - title
+        - module_id
+        - status
+      properties:
+        exercise_id:
+          type: string
+          description: Unique identifier for the exercise
+        title:
+          type: string
+          description: Title of the exercise
+        module_id:
+          type: string
+          description: ID of the parent module
+        week_id:
+          type: string
+          description: ID of the parent week
+        type:
+          type: string
+          enum: [coding, simulation, conceptual, quiz]
+          description: Type of exercise
+        status:
+          type: string
+          enum: [not_started, in_progress, completed]
+          description: Current status of the exercise
+        score:
+          type: number
+          description: Score for the exercise (0.0-100.0)
+        attempts_count:
+          type: integer
+          description: Number of attempts
+        time_spent_seconds:
+          type: integer
+          description: Time spent on the exercise in seconds
+        completed_at:
+          type: string
+          format: date-time
+          description: When the exercise was completed
+        last_accessed:
+          type: string
+          format: date-time
+          description: When the exercise was last accessed
+
+    AssessmentProgress:
+      type: object
+      required:
+        - assessment_id
+        - title
+        - project_number
+        - status
+      properties:
+        assessment_id:
+          type: string
+          description: Unique identifier for the assessment
+        title:
+          type: string
+          description: Title of the assessment project
+        project_number:
+          type: integer
+          description: Project number (1-4)
+        module_id:
+          type: string
+          description: ID of the associated module
+        status:
+          type: string
+          enum: [not_started, in_progress, submitted, graded]
+          description: Current status of the assessment
+        score:
+          type: number
+          description: Score for the assessment (0.0-100.0)
+        submission_date:
+          type: string
+          format: date-time
+          description: When the assessment was submitted
+        grade_date:
+          type: string
+          format: date-time
+          description: When the assessment was graded
+        feedback:
+          type: string
+          description: Feedback from the grader
+        time_spent_seconds:
+          type: integer
+          description: Time spent on the assessment in seconds
+
+    Certificate:
+      type: object
+      required:
+        - id
+        - title
+        - issued_date
+        - valid
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the certificate
+        title:
+          type: string
+          description: Title of the certificate
+        description:
+          type: string
+          description: Description of what the certificate represents
+        issued_date:
+          type: string
+          format: date-time
+          description: When the certificate was issued
+        valid:
+          type: boolean
+          description: Whether the certificate is still valid
+        expiry_date:
+          type: string
+          format: date-time
+          description: When the certificate expires (if applicable)
+        criteria:
+          type: array
+          items:
+            type: string
+          description: Criteria needed to earn the certificate

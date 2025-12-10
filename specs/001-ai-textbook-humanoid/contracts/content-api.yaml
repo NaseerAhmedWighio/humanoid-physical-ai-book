@@ -1,0 +1,516 @@
+openapi: 3.0.0
+info:
+  title: Physical AI & Humanoid Robotics Textbook - Content API
+  description: API for serving textbook content, including modules, weekly content, exercises, and search functionality
+  version: 1.0.0
+servers:
+  - url: https://api.textbook.example.com/v1
+    description: Production server
+  - url: https://staging-api.textbook.example.com/v1
+    description: Staging server
+
+paths:
+  /content/modules:
+    get:
+      summary: Get all course modules
+      description: Retrieve a list of all course modules with basic information
+      parameters:
+        - name: include_weekly_content
+          in: query
+          description: Whether to include weekly content in the response
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: List of modules
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  modules:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Module'
+        '400':
+          description: Invalid parameters
+        '500':
+          description: Internal server error
+
+  /content/modules/{module_id}:
+    get:
+      summary: Get specific module
+      description: Retrieve detailed information about a specific module
+      parameters:
+        - name: module_id
+          in: path
+          required: true
+          description: Unique identifier of the module
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Module details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Module'
+        '404':
+          description: Module not found
+        '500':
+          description: Internal server error
+
+  /content/weeks:
+    get:
+      summary: Get weekly content
+      description: Retrieve a list of weekly content for the course
+      parameters:
+        - name: module_id
+          in: query
+          description: Filter by module ID
+          required: false
+          schema:
+            type: string
+        - name: week_number
+          in: query
+          description: Filter by specific week number
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of weekly content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  weeks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WeeklyContent'
+        '400':
+          description: Invalid parameters
+        '500':
+          description: Internal server error
+
+  /content/weeks/{week_id}:
+    get:
+      summary: Get specific week content
+      description: Retrieve detailed content for a specific week
+      parameters:
+        - name: week_id
+          in: path
+          required: true
+          description: Unique identifier of the week
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Week content details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeeklyContent'
+        '404':
+          description: Week not found
+        '500':
+          description: Internal server error
+
+  /content/exercises:
+    get:
+      summary: Get exercises
+      description: Retrieve a list of exercises, optionally filtered by module or week
+      parameters:
+        - name: module_id
+          in: query
+          description: Filter by module ID
+          required: false
+          schema:
+            type: string
+        - name: week_id
+          in: query
+          description: Filter by week ID
+          required: false
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: Filter by exercise type
+          required: false
+          schema:
+            type: string
+            enum: [coding, conceptual, quiz, simulation]
+      responses:
+        '200':
+          description: List of exercises
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exercises:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Exercise'
+        '400':
+          description: Invalid parameters
+        '500':
+          description: Internal server error
+
+  /content/exercises/{exercise_id}/submit:
+    post:
+      summary: Submit exercise answer
+      description: Submit an answer for a specific exercise and get feedback
+      parameters:
+        - name: exercise_id
+          in: path
+          required: true
+          description: Unique identifier of the exercise
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answer:
+                  type: string
+                  description: The user's answer to the exercise
+                code:
+                  type: string
+                  description: Code submission for coding exercises
+      responses:
+        '200':
+          description: Exercise submission result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseSubmission'
+        '400':
+          description: Invalid submission
+        '404':
+          description: Exercise not found
+        '500':
+          description: Internal server error
+
+  /content/search:
+    post:
+      summary: Search content
+      description: Perform semantic search across textbook content using RAG
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - query
+              properties:
+                query:
+                  type: string
+                  description: Search query
+                top_k:
+                  type: integer
+                  description: Number of results to return (default 5)
+                  default: 5
+                filters:
+                  type: object
+                  description: Additional filters for search
+                  properties:
+                    module_id:
+                      type: string
+                      description: Filter by specific module
+                    content_type:
+                      type: string
+                      enum: [text, code, exercise, quiz]
+                      description: Filter by content type
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResults'
+        '400':
+          description: Invalid search parameters
+        '500':
+          description: Internal server error
+
+  /content/assessments:
+    get:
+      summary: Get assessment projects
+      description: Retrieve a list of assessment projects for the course
+      responses:
+        '200':
+          description: List of assessment projects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  assessments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AssessmentProject'
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    Module:
+      type: object
+      required:
+        - id
+        - title
+        - module_number
+        - description
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the module
+        title:
+          type: string
+          description: Title of the module
+        module_number:
+          type: integer
+          description: Module number (1-4)
+        description:
+          type: string
+          description: Brief description of the module
+        word_count:
+          type: integer
+          description: Number of words in the module
+        estimated_duration_hours:
+          type: number
+          description: Estimated time to complete in hours
+        learning_outcomes:
+          type: array
+          items:
+            type: string
+          description: List of learning outcomes
+        prerequisites:
+          type: array
+          items:
+            type: string
+          description: List of prerequisite module IDs
+        weekly_content:
+          type: array
+          items:
+            $ref: '#/components/schemas/WeeklyContent'
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    WeeklyContent:
+      type: object
+      required:
+        - id
+        - week_number
+        - title
+        - module_id
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the week
+        week_number:
+          type: integer
+          description: Week number (1-13)
+        title:
+          type: string
+          description: Title of the week
+        module_id:
+          type: string
+          description: ID of the parent module
+        subtopics:
+          type: array
+          items:
+            type: string
+          description: List of subtopics covered
+        content_path:
+          type: string
+          description: Path to the MD file containing content
+        exercises_count:
+          type: integer
+          description: Number of exercises in this week
+        quizzes_count:
+          type: integer
+          description: Number of quizzes in this week
+        case_studies_count:
+          type: integer
+          description: Number of case studies in this week
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    Exercise:
+      type: object
+      required:
+        - id
+        - title
+        - type
+        - content
+        - module_id
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the exercise
+        title:
+          type: string
+          description: Title of the exercise
+        type:
+          type: string
+          enum: [coding, simulation, conceptual, quiz]
+          description: Type of exercise
+        difficulty:
+          type: string
+          enum: [beginner, intermediate, advanced]
+          description: Difficulty level
+        content:
+          type: string
+          description: Exercise content in markdown format
+        solution:
+          type: string
+          description: Solution for auto-graded exercises
+        module_id:
+          type: string
+          description: ID of the parent module
+        week_id:
+          type: string
+          description: ID of the parent week (optional)
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    ExerciseSubmission:
+      type: object
+      required:
+        - exercise_id
+        - submitted_answer
+        - is_correct
+        - feedback
+      properties:
+        exercise_id:
+          type: string
+          description: ID of the exercise
+        submitted_answer:
+          type: string
+          description: The submitted answer
+        is_correct:
+          type: boolean
+          description: Whether the answer is correct
+        score:
+          type: number
+          description: Score for the submission (0.0-100.0)
+        feedback:
+          type: string
+          description: Feedback for the submission
+        explanation:
+          type: string
+          description: Detailed explanation of the correct answer
+
+    SearchResults:
+      type: object
+      required:
+        - query
+        - results
+      properties:
+        query:
+          type: string
+          description: The original search query
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchResult'
+        total_results:
+          type: integer
+          description: Total number of results found
+
+    SearchResult:
+      type: object
+      required:
+        - id
+        - content
+        - source_type
+        - similarity_score
+      properties:
+        id:
+          type: string
+          description: ID of the content chunk
+        content:
+          type: string
+          description: The content text
+        source_type:
+          type: string
+          enum: [module, week, exercise, code_example, visual_aid]
+          description: Type of content source
+        source_id:
+          type: string
+          description: ID of the source content
+        source_title:
+          type: string
+          description: Title of the source content
+        similarity_score:
+          type: number
+          description: Similarity score (0.0-1.0)
+        metadata:
+          type: object
+          description: Additional metadata about the content
+
+    AssessmentProject:
+      type: object
+      required:
+        - id
+        - title
+        - project_number
+        - description
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the assessment
+        title:
+          type: string
+          description: Title of the assessment project
+        project_number:
+          type: integer
+          description: Project number (1-4)
+        description:
+          type: string
+          description: Detailed description of the project
+        rubric:
+          type: object
+          description: Evaluation criteria and points
+        module_id:
+          type: string
+          description: ID of the associated module
+        deadline:
+          type: string
+          format: date-time
+          description: Project deadline
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp

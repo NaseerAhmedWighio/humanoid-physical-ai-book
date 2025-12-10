@@ -1,0 +1,719 @@
+openapi: 3.0.0
+info:
+  title: Physical AI & Humanoid Robotics Textbook API
+  description: API for the AI-native textbook website on Physical AI & Humanoid Robotics
+  version: 1.0.0
+servers:
+  - url: https://api.physical-ai-textbook.com/v1
+    description: Production server
+  - url: https://staging-api.physical-ai-textbook.com/v1
+    description: Staging server
+
+paths:
+  /content/modules:
+    get:
+      summary: Get all course modules
+      description: Retrieve a list of all course modules with basic information
+      responses:
+        '200':
+          description: List of course modules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseModule'
+        '401':
+          description: Unauthorized access
+    post:
+      summary: Create a new course module
+      description: Create a new module for the textbook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseModuleCreate'
+      responses:
+        '201':
+          description: Module created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseModule'
+        '401':
+          description: Unauthorized access
+        '422':
+          description: Validation error
+
+  /content/modules/{module_id}:
+    get:
+      summary: Get a specific course module
+      description: Retrieve detailed information about a specific course module
+      parameters:
+        - name: module_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Course module details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseModuleDetail'
+        '404':
+          description: Module not found
+        '401':
+          description: Unauthorized access
+
+  /content/weekly/{week_number}:
+    get:
+      summary: Get weekly content
+      description: Retrieve content for a specific week
+      parameters:
+        - name: week_number
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 13
+      responses:
+        '200':
+          description: Weekly content details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeeklyContent'
+        '404':
+          description: Week not found
+        '401':
+          description: Unauthorized access
+
+  /content/search:
+    post:
+      summary: Search content using RAG
+      description: Search textbook content using vector search with user query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: User search query
+                top_k:
+                  type: integer
+                  description: Number of results to return (default: 5)
+                context_window:
+                  type: string
+                  description: Additional context to include with query
+              required:
+                - query
+      responses:
+        '200':
+          description: Search results with relevant content chunks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ContentChunk'
+                  context:
+                    type: string
+                    description: Context used for RAG response
+        '401':
+          description: Unauthorized access
+
+  /exercises:
+    get:
+      summary: Get exercises
+      description: Retrieve exercises filtered by various criteria
+      parameters:
+        - name: module_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: week_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: difficulty
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [beginner, intermediate, advanced]
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [coding, simulation, conceptual, quiz]
+      responses:
+        '200':
+          description: List of exercises
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exercise'
+        '401':
+          description: Unauthorized access
+
+  /exercises/{exercise_id}/submit:
+    post:
+      summary: Submit exercise answer
+      description: Submit an answer for an exercise and get feedback
+      parameters:
+        - name: exercise_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answer:
+                  type: string
+                  description: User's answer to the exercise
+                code_submission:
+                  type: string
+                  description: Code submission if it's a coding exercise
+              required:
+                - answer
+      responses:
+        '200':
+          description: Exercise submission result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseSubmissionResult'
+        '401':
+          description: Unauthorized access
+        '404':
+          description: Exercise not found
+
+  /progress:
+    get:
+      summary: Get user progress
+      description: Retrieve the current progress of the authenticated user
+      responses:
+        '200':
+          description: User progress summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProgress'
+        '401':
+          description: Unauthorized access
+
+  /progress/{module_id}:
+    get:
+      summary: Get progress for specific module
+      description: Retrieve progress details for a specific module
+      parameters:
+        - name: module_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Module progress details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModuleProgress'
+        '401':
+          description: Unauthorized access
+        '404':
+          description: Module not found
+
+  /chat/sessions:
+    get:
+      summary: Get user chat sessions
+      description: Retrieve a list of the user's chat sessions
+      responses:
+        '200':
+          description: List of chat sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatSession'
+        '401':
+          description: Unauthorized access
+    post:
+      summary: Create a new chat session
+      description: Create a new chat session for the user
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                session_title:
+                  type: string
+                  description: Title for the new session
+      responses:
+        '201':
+          description: Chat session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+        '401':
+          description: Unauthorized access
+
+  /chat/sessions/{session_id}/messages:
+    get:
+      summary: Get messages from a chat session
+      description: Retrieve all messages from a specific chat session
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of messages in the session
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatMessage'
+        '401':
+          description: Unauthorized access
+        '404':
+          description: Session not found
+    post:
+      summary: Send a message in chat session
+      description: Send a new message in the chat session
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: The message content
+                message_type:
+                  type: string
+                  enum: [query, exercise_help, code_explanation]
+                  default: query
+              required:
+                - content
+      responses:
+        '201':
+          description: Message sent and response received
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessage'
+        '401':
+          description: Unauthorized access
+        '404':
+          description: Session not found
+
+components:
+  schemas:
+    CourseModule:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        module_number:
+          type: integer
+        description:
+          type: string
+        word_count:
+          type: integer
+        estimated_duration_hours:
+          type: number
+        learning_outcomes:
+          type: array
+          items:
+            type: string
+        prerequisites:
+          type: array
+          items:
+            type: string
+            format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - module_number
+        - description
+        - word_count
+        - estimated_duration_hours
+        - learning_outcomes
+
+    CourseModuleDetail:
+      allOf:
+        - $ref: '#/components/schemas/CourseModule'
+        - type: object
+          properties:
+            content_path:
+              type: string
+            exercises_count:
+              type: integer
+            quizzes_count:
+              type: integer
+            case_studies_count:
+              type: integer
+            assessments:
+              type: array
+              items:
+                $ref: '#/components/schemas/AssessmentProject'
+
+    CourseModuleCreate:
+      type: object
+      properties:
+        title:
+          type: string
+        module_number:
+          type: integer
+        description:
+          type: string
+        word_count:
+          type: integer
+        estimated_duration_hours:
+          type: number
+        learning_outcomes:
+          type: array
+          items:
+            type: string
+        prerequisites:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+        - title
+        - module_number
+        - description
+        - word_count
+        - estimated_duration_hours
+        - learning_outcomes
+
+    WeeklyContent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        week_number:
+          type: integer
+        title:
+          type: string
+        module_id:
+          type: string
+          format: uuid
+        subtopics:
+          type: array
+          items:
+            type: string
+        content_path:
+          type: string
+        exercises_count:
+          type: integer
+        quizzes_count:
+          type: integer
+        case_studies_count:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - week_number
+        - title
+        - module_id
+        - subtopics
+        - content_path
+        - exercises_count
+        - quizzes_count
+        - case_studies_count
+
+    Exercise:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        type:
+          type: string
+          enum: [coding, simulation, conceptual, quiz]
+        difficulty:
+          type: string
+          enum: [beginner, intermediate, advanced]
+        content:
+          type: string
+        module_id:
+          type: string
+          format: uuid
+        week_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - type
+        - difficulty
+        - content
+        - module_id
+
+    ExerciseSubmissionResult:
+      type: object
+      properties:
+        exercise_id:
+          type: string
+          format: uuid
+        is_correct:
+          type: boolean
+        score:
+          type: number
+        feedback:
+          type: string
+        explanation:
+          type: string
+      required:
+        - exercise_id
+        - is_correct
+        - score
+        - feedback
+
+    UserProgress:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        current_week:
+          type: integer
+        progress_percentage:
+          type: number
+        modules_progress:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModuleProgress'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - user_id
+        - current_week
+        - progress_percentage
+        - modules_progress
+
+    ModuleProgress:
+      type: object
+      properties:
+        module_id:
+          type: string
+          format: uuid
+        module_number:
+          type: integer
+        title:
+          type: string
+        completed_weeks:
+          type: integer
+        total_weeks:
+          type: integer
+        exercises_completed:
+          type: integer
+        exercises_total:
+          type: integer
+        quizzes_completed:
+          type: integer
+        quizzes_total:
+          type: integer
+        status:
+          type: string
+          enum: [not_started, in_progress, completed]
+        progress_percentage:
+          type: number
+      required:
+        - module_id
+        - module_number
+        - title
+        - completed_weeks
+        - total_weeks
+        - exercises_completed
+        - exercises_total
+        - quizzes_completed
+        - quizzes_total
+        - status
+        - progress_percentage
+
+    ContentChunk:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        module_id:
+          type: string
+          format: uuid
+        chunk_index:
+          type: integer
+        content:
+          type: string
+        semantic_tags:
+          type: array
+          items:
+            type: string
+        relevance_score:
+          type: number
+      required:
+        - id
+        - module_id
+        - chunk_index
+        - content
+        - relevance_score
+
+    ChatSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        session_title:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        is_active:
+          type: boolean
+      required:
+        - id
+        - session_title
+        - created_at
+        - updated_at
+        - is_active
+
+    ChatMessage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        session_id:
+          type: string
+          format: uuid
+        sender_type:
+          type: string
+          enum: [user, assistant]
+        content:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        context_chunks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentChunk'
+        message_type:
+          type: string
+          enum: [query, response, exercise_help, code_explanation]
+      required:
+        - id
+        - session_id
+        - sender_type
+        - content
+        - timestamp
+        - message_type
+
+    AssessmentProject:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        project_number:
+          type: integer
+        description:
+          type: string
+        rubric:
+          type: object
+          additionalProperties: true
+        module_id:
+          type: string
+          format: uuid
+        deadline:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - project_number
+        - description
+        - rubric

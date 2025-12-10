@@ -1,0 +1,264 @@
+.weeklyContent {
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.weekHeader {
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.weekTitleSection {
+  margin-bottom: 1rem;
+}
+
+.weekNumber {
+  display: inline-block;
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.weekHeader h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #1f2937;
+}
+
+.weekMeta {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.metaItem {
+  background-color: #f9fafb;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.subtopicsSection {
+  margin-bottom: 2rem;
+}
+
+.subtopicsSection h2 {
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.subtopicsList {
+  padding-left: 0;
+  list-style: none;
+}
+
+.subtopicItem {
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background-color: #f9fafb;
+  border-left: 4px solid #3b82f6;
+  display: flex;
+  align-items: flex-start;
+}
+
+.subtopicBullet {
+  margin-right: 0.5rem;
+  font-weight: bold;
+  color: #3b82f6;
+}
+
+.exercisesSection {
+  margin-bottom: 2rem;
+}
+
+.exercisesSection h2 {
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.exercisesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.exerciseCard {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.exerciseHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.exerciseHeader h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  flex: 1;
+}
+
+.difficultyBadge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.difficultyBadge.beginner {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.difficultyBadge.intermediate {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.difficultyBadge.advanced {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.exerciseContent {
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.exerciseMeta {
+  margin-bottom: 1rem;
+}
+
+.exerciseType {
+  background-color: #e0e7ff;
+  color: #4f46e5;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.exerciseActions {
+  text-align: center;
+}
+
+.exerciseActions .button {
+  background-color: #10b981;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.exerciseActions .button:hover {
+  background-color: #059669;
+  text-decoration: none;
+}
+
+.resourcesSection {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.resourcesSection h2 {
+  color: #1f2937;
+  margin-top: 0;
+}
+
+.resourcesSection ul {
+  padding-left: 1.5rem;
+}
+
+.resourcesSection li {
+  margin-bottom: 0.5rem;
+}
+
+.weekNavigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.navButton .button {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.navButton .button:hover {
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.navButton .button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.navButton .button--primary {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.navButton .button--primary:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.navButton .button--outline {
+  background-color: transparent;
+  color: #3b82f6;
+}
+
+@media (max-width: 768px) {
+  .weekMeta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .exercisesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .weekNavigation {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .weekHeader h1 {
+    font-size: 1.5rem;
+  }
+
+  .exerciseHeader {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

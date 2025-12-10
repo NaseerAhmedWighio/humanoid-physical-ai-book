@@ -1,0 +1,79 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+venv/
+env/
+ENV/
+.venv/
+.env
+venv.bak/
+ENV.bak/
+.venv.bak/
+
+# FastAPI / Backend
+*.log
+logs/
+log/
+
+# Docusaurus / Frontend
+node_modules/
+npm-debug.log
+yarn-debug.log*
+yarn-error.log*
+.cache/
+.docusaurus/
+.build/
+.dist/
+coverage/
+.nyc_output
+
+# Environment variables
+.env*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Database
+*.db
+*.db-journal
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+desktop.ini
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.cov/

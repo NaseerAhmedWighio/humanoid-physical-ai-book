@@ -1,3 +1,48 @@
+---
+id: 1
+title: "AI Textbook Implementation Plan"
+stage: plan
+date_iso: "2025-12-10"
+surface: "agent"
+model: "sonnet"
+feature: "001-ai-textbook-humanoid"
+branch: "001-ai-textbook-humanoid"
+user: "user"
+command: "/sp.plan"
+labels: ["implementation", "planning", "architecture", "textbook"]
+links:
+  spec: null
+  ticket: null
+  adr: null
+  pr: null
+files:
+  - "specs/001-ai-textbook-humanoid/plan.md"
+  - "specs/001-ai-textbook-humanoid/research.md"
+  - "specs/001-ai-textbook-humanoid/data-model.md"
+  - "specs/001-ai-textbook-humanoid/quickstart.md"
+  - "specs/001-ai-textbook-humanoid/contracts/content-api.yaml"
+  - "specs/001-ai-textbook-humanoid/contracts/rag-chat-api.yaml"
+  - "specs/001-ai-textbook-humanoid/contracts/user-progress-api.yaml"
+tests: []
+prompt_text: |
+  Create a detailed implementation plan for the Physical AI & Humanoid Robotics textbook, focusing on generating powerful, long MD files with Docusaurus. Steps: 1) Generate content via Spec-Kit Plus for intro, modules, weeks, outcomes, assessments—ensure each MD is 3000-5000+ words with in-depth explanations, Python/ROS code blocks (e.g., full node publisher/subscriber examples), Mermaid diagrams for architectures (e.g., ROS graph), PlantUML for URDF visuals, interactive elements like collapsible quizzes/exercises, real-world case studies (e.g., humanoid in disaster response), ethical sections, and APA/IEEE references; 2) Customize Docusaurus theme for neon borders/tabs/search (Ctrl+K via Algolia), add plugins for MDX code highlighting/interactive playgrounds; 3) Build RAG backend with FastAPI/OpenAI/ChatKit/Neon/Qdrant to handle long contexts/user-selected text, indexing all detailed MD chunks; 4) Embed chatbot with support for querying exercises or generating custom quizzes; 5) Add appendices per M
+response_text: |
+  Successfully created a comprehensive implementation plan for the Physical AI & Humanoid Robotics textbook. The plan includes:
+
+  1. Complete plan.md with all required sections (Summary, Technical Context, Constitution Check, Project Structure, etc.)
+  2. Research.md with technology stack decisions and rationale
+  3. Data-model.md with all entities and relationships for the system
+  4. Quickstart.md with comprehensive setup and usage instructions
+  5. API contracts in YAML format for:
+     - Content management API
+     - RAG and chat functionality API
+     - User progress tracking API
+
+  All artifacts adhere to the project's constitution focusing on real-world applications, modular structure, hands-on learning, ethical AI integration, high-quality standards, and digital-physical bridge concepts.
+outcome: "Implementation plan successfully created with all required artifacts"
+evaluation: "All required files created and validated according to project constitution"
+---
+
 # Implementation Plan: Physical AI & Humanoid Robotics Textbook
 
 **Branch**: `001-ai-textbook-humanoid` | **Date**: 2025-12-10 | **Spec**: specs/001-ai-textbook-humanoid/spec.md

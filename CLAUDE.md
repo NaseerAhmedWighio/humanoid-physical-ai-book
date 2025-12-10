@@ -208,3 +208,10 @@ Wait for consent; never auto-create ADRs. Group related decisions (stacks, authe
 
 ## Code Standards
 See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
+
+## Active Technologies
+- Python 3.8+ (for backend services and content generation), JavaScript/TypeScript (for Docusaurus frontend), Markdown (for content files) + Docusaurus (static site generation), FastAPI (backend API), OpenAI API (RAG functionality), Qdrant (vector database), React (frontend components), ROS 2 Humble Hawksbill (simulation integration) (001-ai-textbook-humanoid)
+- PostgreSQL (user data and progress tracking), Qdrant (vector embeddings for RAG), File system (Markdown content files), Neon (PostgreSQL hosting) (001-ai-textbook-humanoid)
+
+## Recent Changes
+- 001-ai-textbook-humanoid: Added Python 3.8+ (for backend services and content generation), JavaScript/TypeScript (for Docusaurus frontend), Markdown (for content files) + Docusaurus (static site generation), FastAPI (backend API), OpenAI API (RAG functionality), Qdrant (vector database), React (frontend components), ROS 2 Humble Hawksbill (simulation integration)

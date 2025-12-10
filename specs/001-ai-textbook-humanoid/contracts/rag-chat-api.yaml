@@ -1,0 +1,652 @@
+openapi: 3.0.0
+info:
+  title: Physical AI & Humanoid Robotics Textbook - RAG & Chat API
+  description: API for RAG functionality and AI-powered chat features
+  version: 1.0.0
+servers:
+  - url: https://api.textbook.example.com/v1
+    description: Production server
+  - url: https://staging-api.textbook.example.com/v1
+    description: Staging server
+
+paths:
+  /rag/search:
+    post:
+      summary: Semantic search with RAG
+      description: Perform semantic search across textbook content with RAG context
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - query
+              properties:
+                query:
+                  type: string
+                  description: Search query
+                top_k:
+                  type: integer
+                  description: Number of results to return (default 5)
+                  default: 5
+                filters:
+                  type: object
+                  description: Additional filters for search
+                  properties:
+                    module_id:
+                      type: string
+                      description: Filter by specific module
+                    content_type:
+                      type: string
+                      enum: [text, code, exercise, quiz, visual_aid]
+                      description: Filter by content type
+                    week_number:
+                      type: integer
+                      description: Filter by specific week number
+                include_context:
+                  type: boolean
+                  description: Whether to include full context in results
+                  default: true
+      responses:
+        '200':
+          description: Search results with RAG context
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RAGSearchResults'
+        '400':
+          description: Invalid search parameters
+        '500':
+          description: Internal server error
+
+  /chat/sessions:
+    post:
+      summary: Create a new chat session
+      description: Create a new chat session for textbook interaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                session_title:
+                  type: string
+                  description: Optional title for the session
+                user_context:
+                  type: object
+                  description: User context information
+                  properties:
+                    current_module:
+                      type: string
+                      description: Current module ID the user is studying
+                    current_week:
+                      type: integer
+                      description: Current week number the user is studying
+                    learning_preferences:
+                      type: array
+                      items:
+                        type: string
+                      description: User's learning preferences
+      responses:
+        '201':
+          description: Chat session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+        '400':
+          description: Invalid session parameters
+        '500':
+          description: Internal server error
+
+  /chat/sessions/{session_id}:
+    get:
+      summary: Get chat session details
+      description: Retrieve details of a specific chat session
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          description: Unique identifier of the chat session
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Chat session details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+        '404':
+          description: Chat session not found
+        '500':
+          description: Internal server error
+
+  /chat/sessions/{session_id}/messages:
+    get:
+      summary: Get chat messages
+      description: Retrieve all messages in a chat session
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          description: Unique identifier of the chat session
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Maximum number of messages to return
+          schema:
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          description: Number of messages to skip
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of chat messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChatMessage'
+                  total_count:
+                    type: integer
+        '404':
+          description: Chat session not found
+        '500':
+          description: Internal server error
+
+    post:
+      summary: Send a message in chat session
+      description: Send a message in the chat session and get AI response
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          description: Unique identifier of the chat session
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - content
+              properties:
+                content:
+                  type: string
+                  description: The message content
+                message_type:
+                  type: string
+                  enum: [query, exercise_help, code_explanation, content_explanation]
+                  description: Type of message
+                context:
+                  type: object
+                  description: Additional context for the query
+                  properties:
+                    related_module:
+                      type: string
+                      description: Module ID related to the query
+                    related_exercise:
+                      type: string
+                      description: Exercise ID if asking about an exercise
+                    include_code_context:
+                      type: boolean
+                      description: Whether to include code context in response
+      responses:
+        '200':
+          description: Response from the AI assistant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '400':
+          description: Invalid message parameters
+        '404':
+          description: Chat session not found
+        '500':
+          description: Internal server error
+
+  /chat/sessions/{session_id}/messages/{message_id}:
+    delete:
+      summary: Delete a chat message
+      description: Delete a specific message from the chat session
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          description: Unique identifier of the chat session
+          schema:
+            type: string
+        - name: message_id
+          in: path
+          required: true
+          description: Unique identifier of the message
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Message deleted successfully
+        '404':
+          description: Message or session not found
+        '500':
+          description: Internal server error
+
+  /chat/exercise-help:
+    post:
+      summary: Get help with an exercise
+      description: Get AI-powered help with a specific exercise
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - exercise_id
+                - user_attempt
+              properties:
+                exercise_id:
+                  type: string
+                  description: ID of the exercise
+                user_attempt:
+                  type: string
+                  description: User's current attempt at the exercise
+                hint_level:
+                  type: string
+                  enum: [minimal, moderate, detailed]
+                  description: Level of hints to provide
+                  default: moderate
+      responses:
+        '200':
+          description: Help response for the exercise
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExerciseHelpResponse'
+        '400':
+          description: Invalid exercise help request
+        '404':
+          description: Exercise not found
+        '500':
+          description: Internal server error
+
+  /chat/generate-quiz:
+    post:
+      summary: Generate a custom quiz
+      description: Generate a custom quiz based on specified topics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                topics:
+                  type: array
+                  items:
+                    type: string
+                  description: Topics to include in the quiz
+                module_id:
+                  type: string
+                  description: Module ID to focus on
+                week_number:
+                  type: integer
+                  description: Week number to focus on
+                num_questions:
+                  type: integer
+                  description: Number of questions to generate
+                  default: 5
+                difficulty:
+                  type: string
+                  enum: [beginner, intermediate, advanced]
+                  description: Difficulty level of the quiz
+                question_types:
+                  type: array
+                  items:
+                    type: string
+                    enum: [multiple_choice, true_false, short_answer, coding]
+                  description: Types of questions to include
+      responses:
+        '200':
+          description: Generated quiz
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneratedQuiz'
+        '400':
+          description: Invalid quiz generation parameters
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    RAGSearchResults:
+      type: object
+      required:
+        - query
+        - results
+        - context_chunks
+      properties:
+        query:
+          type: string
+          description: The original search query
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchResult'
+        context_chunks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentChunk'
+          description: Content chunks used for RAG context
+        total_results:
+          type: integer
+          description: Total number of results found
+        execution_time_ms:
+          type: number
+          description: Time taken to execute the search in milliseconds
+
+    SearchResult:
+      type: object
+      required:
+        - id
+        - content
+        - source_type
+        - similarity_score
+      properties:
+        id:
+          type: string
+          description: ID of the content chunk
+        content:
+          type: string
+          description: The content text
+        source_type:
+          type: string
+          enum: [module, week, exercise, code_example, visual_aid]
+          description: Type of content source
+        source_id:
+          type: string
+          description: ID of the source content
+        source_title:
+          type: string
+          description: Title of the source content
+        similarity_score:
+          type: number
+          description: Similarity score (0.0-1.0)
+        metadata:
+          type: object
+          description: Additional metadata about the content
+
+    ContentChunk:
+      type: object
+      required:
+        - id
+        - content
+        - chunk_index
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the content chunk
+        module_id:
+          type: string
+          description: ID of the parent module
+        chunk_index:
+          type: integer
+          description: Index of this chunk within the content
+        content:
+          type: string
+          description: The content text
+        embedding_vector:
+          type: array
+          items:
+            type: number
+          description: Embedding vector for semantic search
+        semantic_tags:
+          type: array
+          items:
+            type: string
+          description: Semantic tags for search optimization
+
+    ChatSession:
+      type: object
+      required:
+        - id
+        - user_id
+        - created_at
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the chat session
+        user_id:
+          type: string
+          description: ID of the user who owns the session
+        session_title:
+          type: string
+          description: Title of the session
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        is_active:
+          type: boolean
+          description: Whether the session is currently active
+          default: true
+        context:
+          type: object
+          description: Context information for the session
+          properties:
+            current_module:
+              type: string
+              description: Current module ID the user is studying
+            current_week:
+              type: integer
+              description: Current week number the user is studying
+
+    ChatMessage:
+      type: object
+      required:
+        - id
+        - session_id
+        - sender_type
+        - content
+        - timestamp
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the message
+        session_id:
+          type: string
+          description: ID of the parent session
+        sender_type:
+          type: string
+          enum: [user, assistant]
+          description: Type of sender
+        content:
+          type: string
+          description: Message content
+        timestamp:
+          type: string
+          format: date-time
+          description: When the message was sent
+        message_type:
+          type: string
+          enum: [query, response, exercise_help, code_explanation, content_explanation]
+          description: Type of message
+        context_chunks:
+          type: array
+          items:
+            type: string
+          description: IDs of content chunks used in the response
+
+    ChatResponse:
+      allOf:
+        - $ref: '#/components/schemas/ChatMessage'
+        - type: object
+          properties:
+            sources:
+              type: array
+              items:
+                $ref: '#/components/schemas/SourceReference'
+              description: Sources referenced in the response
+            confidence_score:
+              type: number
+              description: Confidence score of the response (0.0-1.0)
+            followup_questions:
+              type: array
+              items:
+                type: string
+              description: Suggested follow-up questions
+
+    SourceReference:
+      type: object
+      required:
+        - id
+        - title
+        - source_type
+      properties:
+        id:
+          type: string
+          description: ID of the source
+        title:
+          type: string
+          description: Title of the source
+        source_type:
+          type: string
+          enum: [module, week, exercise, code_example, visual_aid]
+          description: Type of source
+        page_number:
+          type: integer
+          description: Page number if applicable
+        similarity_score:
+          type: number
+          description: Similarity score to the query (0.0-1.0)
+
+    ExerciseHelpResponse:
+      type: object
+      required:
+        - exercise_id
+        - feedback
+        - suggestions
+      properties:
+        exercise_id:
+          type: string
+          description: ID of the exercise
+        feedback:
+          type: string
+          description: Feedback on the user's attempt
+        suggestions:
+          type: array
+          items:
+            type: string
+          description: Suggestions for improvement
+        hints:
+          type: array
+          items:
+            type: string
+          description: Hints to help with the exercise
+        related_content:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceReference'
+          description: Related content that might help
+        next_steps:
+          type: array
+          items:
+            type: string
+          description: Recommended next steps
+
+    GeneratedQuiz:
+      type: object
+      required:
+        - id
+        - questions
+        - metadata
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the quiz
+        title:
+          type: string
+          description: Title of the generated quiz
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuizQuestion'
+          description: List of generated questions
+        metadata:
+          type: object
+          description: Metadata about the quiz
+          properties:
+            topics:
+              type: array
+              items:
+                type: string
+              description: Topics covered in the quiz
+            difficulty:
+              type: string
+              enum: [beginner, intermediate, advanced]
+              description: Overall difficulty of the quiz
+            num_questions:
+              type: integer
+              description: Number of questions in the quiz
+            estimated_time_minutes:
+              type: integer
+              description: Estimated time to complete the quiz
+        generated_at:
+          type: string
+          format: date-time
+          description: When the quiz was generated
+
+    QuizQuestion:
+      type: object
+      required:
+        - id
+        - content
+        - type
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the question
+        content:
+          type: string
+          description: The question text
+        type:
+          type: string
+          enum: [multiple_choice, true_false, short_answer, coding]
+          description: Type of question
+        options:
+          type: array
+          items:
+            type: string
+          description: Options for multiple choice questions
+        correct_answer:
+          type: string
+          description: Correct answer (for auto-grading)
+        explanation:
+          type: string
+          description: Explanation of the correct answer
+        difficulty:
+          type: string
+          enum: [beginner, intermediate, advanced]
+          description: Difficulty level of the question
+        related_topics:
+          type: array
+          items:
+            type: string
+          description: Topics related to this question

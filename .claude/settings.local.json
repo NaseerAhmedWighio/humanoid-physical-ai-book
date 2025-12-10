@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"D:\\hackathon_01\\humanoid-ai-book\\frontend\\public\\*\")"
+    ]
+  }
+}
