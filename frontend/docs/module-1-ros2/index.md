@@ -54,6 +54,26 @@ The installation process varies depending on your operating system. For Ubuntu s
 
 After installation, it's important to source the ROS 2 setup script in your shell environment. This script sets up the necessary environment variables and makes ROS 2 commands available in your terminal.
 
+<ConditionalContent forHardware={['physical_robot']} className="important">
+### Physical Robot Integration
+Since you have access to a physical robot, you'll need to ensure your ROS 2 installation is compatible with your robot's hardware. Check the specific requirements for your robot platform and install any additional drivers or packages required for hardware communication.
+</ConditionalContent>
+
+<ConditionalContent forHardware={['laptop']} className="hint">
+### Simulation-First Approach
+With just a laptop, you'll primarily work with ROS 2 in simulation environments. This is actually a great way to learn, as you can experiment without risk of damaging hardware. We'll provide simulation-based exercises throughout this module.
+</ConditionalContent>
+
+<ConditionalContent forExperience={['beginner']} className="note">
+### Step-by-Step Installation Guide
+As a beginner, we recommend following our detailed installation guide step by step. Don't worry if the installation seems complex at first - ROS 2 has many components that work together to create a powerful robotics framework.
+</ConditionalContent>
+
+<ConditionalContent forExperience={['expert']} className="warning">
+### Custom Installation Options
+As an expert user, you may want to customize your ROS 2 installation or build from source. While this is possible, we recommend starting with the standard installation to ensure compatibility with course materials. You can always customize later.
+</ConditionalContent>
+
 ## Creating Your First ROS 2 Package
 
 A ROS 2 package is a container for related functionality. Packages contain source code, configuration files, launch files, and other resources needed for a particular feature or application. Creating a package is the first step in developing any ROS 2 application.

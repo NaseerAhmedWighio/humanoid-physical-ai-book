@@ -1,0 +1,161 @@
+openapi: 3.0.0
+info:
+  title: Chat API
+  description: API for chatbot functionality with RAG (Retrieval Augmented Generation)
+  version: 1.0.0
+
+paths:
+  /api/chat/conversation:
+    post:
+      summary: Send a message and get a response
+      description: Send a user message and receive an AI response with RAG capabilities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                conversation_id:
+                  type: string
+                  description: Unique identifier for the conversation
+                message:
+                  type: string
+                  description: The user's message
+                user_id:
+                  type: string
+                  description: User identifier
+                personalization_enabled:
+                  type: boolean
+                  description: Whether personalization is enabled
+                hardware_preference:
+                  type: string
+                  description: User's hardware preference (mobile, laptop, physical_robot)
+              required:
+                - message
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    description: The AI-generated response
+                  conversation_id:
+                    type: string
+                    description: The conversation identifier
+                  sources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        url:
+                          type: string
+                        content:
+                          type: string
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /api/chat/conversation/{conversationId}:
+    get:
+      summary: Get conversation history
+      description: Retrieve the history of messages in a conversation
+      parameters:
+        - name: conversationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Conversation history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  conversation_id:
+                    type: string
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+        '404':
+          description: Conversation not found
+        '500':
+          description: Internal server error
+
+  /api/content/search:
+    post:
+      summary: Search content for RAG context
+      description: Search the knowledge base for content to use in RAG responses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: The search query
+                limit:
+                  type: integer
+                  description: Maximum number of results to return
+              required:
+                - query
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        content_id:
+                          type: string
+                        title:
+                          type: string
+                        snippet:
+                          type: string
+                        relevance_score:
+                          type: number
+                  total:
+                    type: integer
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        sender:
+          type: string
+          enum: [user, bot]
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - id
+        - text
+        - sender
+        - timestamp

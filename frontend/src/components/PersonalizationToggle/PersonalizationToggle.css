@@ -1,0 +1,169 @@
+.personalization-toggle-container {
+  /* padding: 0.75rem 0; */
+  text-align: center;
+  background-color: transparent;
+  /* margin: 0.5rem 0; */
+  z-index: 100;
+  width: 100%;
+  max-width: 100%;
+}
+
+.personalization-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  /* padding: 0.75rem 1rem; */
+  /* background-color: rgba(255, 255, 255, 0.9); */
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  backdrop-filter: blur(10px); /* Optional: adds a glassmorphism effect */
+  max-width: 400px;
+  margin: 0 10rem;
+}
+
+.personalization-toggle-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 93%;
+}
+
+.toggle-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #495057;
+  white-space: nowrap;
+}
+
+.toggle-status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #007bff;
+  text-transform: uppercase;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 70px;
+  height: 24px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #007bff;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 24px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Personalization options styles */
+.personalization-options {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.expand-toggle {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0;
+  margin-top: 0.25rem;
+}
+
+.expand-toggle:hover {
+  text-decoration: underline;
+}
+
+.expand-icon {
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.options-list {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e9ecef;
+  width: 100%;
+}
+
+.option-item {
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.option-item h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.option-item p {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.option-item ul {
+  margin: 0;
+  padding-left: 1rem;
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.option-item li {
+  margin-bottom: 0.125rem;
+}
+
+.option-item li:last-child {
+  margin-bottom: 0;
+}

@@ -212,6 +212,8 @@ See `.specify/memory/constitution.md` for code quality, testing, performance, se
 ## Active Technologies
 - Python 3.8+ (for backend services and content generation), JavaScript/TypeScript (for Docusaurus frontend), Markdown (for content files) + Docusaurus (static site generation), FastAPI (backend API), OpenAI API (RAG functionality), Qdrant (vector database), React (frontend components), ROS 2 Humble Hawksbill (simulation integration) (001-ai-textbook-humanoid)
 - PostgreSQL (user data and progress tracking), Qdrant (vector embeddings for RAG), File system (Markdown content files), Neon (PostgreSQL hosting) (001-ai-textbook-humanoid)
+- Node.js 18+ (frontend development), npm (package management), localStorage (conversation persistence), Docusaurus Layout system (theme customization) (001-revert-text-highlighter)
 
 ## Recent Changes
 - 001-ai-textbook-humanoid: Added Python 3.8+ (for backend services and content generation), JavaScript/TypeScript (for Docusaurus frontend), Markdown (for content files) + Docusaurus (static site generation), FastAPI (backend API), OpenAI API (RAG functionality), Qdrant (vector database), React (frontend components), ROS 2 Humble Hawksbill (simulation integration)
+- 001-revert-text-highlighter: Removed TextHighlighter component, restored original RAG-based chatbot positioned bottom-right, maintained localStorage conversation persistence, cleaned up contentSelectionService

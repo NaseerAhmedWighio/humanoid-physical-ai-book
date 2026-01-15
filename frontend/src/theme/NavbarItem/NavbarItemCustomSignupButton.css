@@ -1,0 +1,20 @@
+.navbar__signup-button {
+  display: inline-block;
+  padding: 0.3rem 0.8rem !important;
+  margin: 0 !important;
+  font-size: 0.8rem !important;
+  text-decoration: none;
+  border-radius: var(--ifm-global-radius);
+  transition: all var(--ifm-transition-fast) var(--ifm-transition-timing-default);
+}
+
+.navbar__signup-button:hover {
+  background-color: var(--ifm-color-emphasis-200);
+  /* color: var(--ifm-navbar-link-hover-color); */
+  color: var(--ifm-section-background);
+}
+
+.navbar__signup-button:focus {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}

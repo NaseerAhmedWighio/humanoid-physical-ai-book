@@ -1,5 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
 
 app = FastAPI(
     title="Physical AI & Humanoid Robotics Textbook API",
@@ -8,9 +13,16 @@ app = FastAPI(
 )
 
 # Add CORS middleware for frontend communication
+# Get allowed origins from environment variable, fallback to wildcard for development
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "*")  # Use the correct spelling from .env
+if allowed_origins_env == "*":
+    allowed_origins = ["*"]
+else:
+    allowed_origins = [origin.strip() for origin in allowed_origins_env.split(",")]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify exact origins
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -25,9 +37,11 @@ def health_check():
     return {"status": "healthy"}
 
 # Include API routes
-from .api import content, chat, progress, exercise, simulation
+from .api import content, chat, progress, exercise, auth, better_auth, translation
 app.include_router(content.router, prefix="/v1/content", tags=["content"])
 app.include_router(chat.router, prefix="/v1/chat", tags=["chat"])
 app.include_router(progress.router, prefix="/v1/progress", tags=["progress"])
 app.include_router(exercise.router, prefix="/v1/exercises", tags=["exercises"])
-app.include_router(simulation.router, prefix="/v1/simulation", tags=["simulation"])
+app.include_router(auth.router)
+app.include_router(better_auth.router)
+app.include_router(translation.router, prefix="/v1/translation", tags=["translation"])

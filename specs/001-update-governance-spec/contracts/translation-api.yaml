@@ -1,0 +1,82 @@
+openapi: 3.0.0
+info:
+  title: Translation API
+  description: API for translating content between English and Urdu
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+paths:
+  /v1/translation/translate:
+    post:
+      summary: Translate text between languages
+      description: Translates text from source language to target language
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: Text to be translated
+                  example: "Welcome to the humanoid robotics textbook"
+                target_lang:
+                  type: string
+                  description: Target language code (e.g., 'ur' for Urdu, 'en' for English)
+                  example: "ur"
+                source_lang:
+                  type: string
+                  description: Source language code (e.g., 'en' for English, 'ur' for Urdu)
+                  example: "en"
+              required:
+                - text
+                - target_lang
+                - source_lang
+      responses:
+        '200':
+          description: Successful translation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  translated_text:
+                    type: string
+                    description: The translated text
+                    example: "ہیومنوڈ روبوٹکس کی کتاب درس میں خوش آمدید"
+                  source_lang:
+                    type: string
+                    description: Source language code
+                    example: "en"
+                  target_lang:
+                    type: string
+                    description: Target language code
+                    example: "ur"
+                  success:
+                    type: boolean
+                    description: Whether the translation was successful
+                    example: true
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                    example: "Invalid language codes provided"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                    example: "Translation service unavailable"

@@ -18,9 +18,9 @@
   --ifm-button-outline-color: #00eeff;
   --ifm-button-outline-border: 2px solid #00eeff;
   --ifm-button-outline-hover-bg: rgba(0, 238, 255, 0.1);
-  --ifm-tag-bg: linear-gradient(135deg, rgba(0, 238, 255, 0.1) 0%, rgba(0, 119, 255, 0.1) 100%);
-  --ifm-tag-color: #00eeff;
-  --ifm-tag-border: 1px solid rgba(0, 238, 255, 0.3);
+  --ifm-tag1-bg: linear-gradient(135deg, rgba(0, 238, 255, 0.1) 0%, rgba(0, 119, 255, 0.1) 100%);
+  --ifm-tag1-color: #00eeff;
+  --ifm-tag1-border: 1px solid rgba(0, 238, 255, 0.3);
   --ifm-hero-title-gradient: linear-gradient(135deg, #00eeff 0%, #0077ff 50%, #8a2be2 100%);
   --ifm-hero-subtitle-color: #e0e0ff;
   --ifm-hero-description-color: #b0b0ff;
@@ -54,9 +54,9 @@
   --ifm-button-outline-color: #0077ff;
   --ifm-button-outline-border: 2px solid #0077ff;
   --ifm-button-outline-hover-bg: rgba(0, 119, 255, 0.1);
-  --ifm-tag-bg: linear-gradient(135deg, rgba(0, 119, 255, 0.1) 0%, rgba(0, 86, 204, 0.1) 100%);
-  --ifm-tag-color: #0077ff;
-  --ifm-tag-border: 1px solid rgba(0, 119, 255, 0.3);
+  --ifm-tag1-bg: linear-gradient(135deg, rgba(0, 119, 255, 0.1) 0%, rgba(0, 86, 204, 0.1) 100%);
+  --ifm-tag1-color: #0077ff;
+  --ifm-tag1-border: 1px solid rgba(0, 119, 255, 0.3);
   --ifm-hero-title-gradient: linear-gradient(135deg, #0077ff 0%, #0056cc 50%, #8a2be2 100%);
   --ifm-hero-subtitle-color: #495057;
   --ifm-hero-description-color: #6c757d;
@@ -207,6 +207,11 @@ body {
   color: white;
 }
 
+.button--secondary1 {
+  background: var(--ifm-button-secondary-bg);
+  color: var(--ifm-section-background);
+}
+
 .button--secondary:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(0, 119, 255, 0.4);
@@ -225,10 +230,12 @@ body {
 }
 
 .row {
+  /* margin-top: 4rem; */
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
+  flex-direction: row;
+  align-items: initial;
+  /* justify-content: space-between; */
+  /* gap: 2rem; */
 }
 
 .col {
@@ -266,18 +273,18 @@ body {
   margin-top: 2rem;
 }
 
-.tag {
-  background: var(--ifm-tag-bg);
-  color: var(--ifm-tag-color);
+.tag1 {
+  background: var(--ifm-tag1-bg);
+  color: var(--ifm-tag1-color);
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 500;
-  border: var(--ifm-tag-border);
+  border: var(--ifm-tag1-border);
   transition: all 0.3s ease;
 }
 
-.tag:hover {
+.tag1:hover {
   background: linear-gradient(135deg, rgba(0, 238, 255, 0.2) 0%, rgba(0, 119, 255, 0.2) 100%);
   transform: translateY(-1px);
   box-shadow: 0 5px 15px rgba(0, 238, 255, 0.2);

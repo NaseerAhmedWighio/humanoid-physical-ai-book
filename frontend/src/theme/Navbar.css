@@ -1,0 +1,28 @@
+/* This file may be kept for any other navbar-specific styles if needed */
+/* Currently empty as the personalization toggle has been moved to Layout */
+
+.navbar-translate-button {
+  position: absolute;
+  right: 120px; /* Position to the left of search button */
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1001; /* Ensure it's above other navbar elements */
+}
+
+/* Responsive adjustments */
+@media (max-width: 996px) {
+  .navbar-translate-button {
+    right: 80px; /* Adjust for smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-translate-button {
+    right: 60px; /* Adjust for mobile */
+    position: relative;
+    transform: none;
+    top: auto;
+    margin-left: 10px;
+  }
+}
+

@@ -60,6 +60,31 @@ To succeed in this course, you should have:
 - Familiarity with Linux operating systems
 - Interest in robotics and AI
 
+<ConditionalContent forExperience={['beginner']} className="note">
+### Beginner-Friendly Introduction
+If you're new to robotics, don't worry! This course is designed to take you from the basics all the way to advanced concepts. We'll start with fundamental ROS 2 concepts and gradually build up to complex humanoid robotics systems.
+</ConditionalContent>
+
+<ConditionalContent forExperience={['experienced', 'expert']} className="hint">
+### Advanced Track
+As an experienced developer, you may find the basic concepts familiar. We recommend focusing on the advanced modules that dive deep into NVIDIA Isaac and Vision Language Action models, which are cutting-edge technologies in humanoid robotics.
+</ConditionalContent>
+
+<ConditionalContent forHardware={['physical_robot']} className="important">
+### Physical Robot Access
+Since you have access to a physical robot, you'll be able to follow along with real hardware exercises. Look for sections marked with the "Hardware Lab" tag throughout the course for hands-on activities.
+</ConditionalContent>
+
+<ConditionalContent forHardware={['laptop']} className="warning">
+### Laptop-Based Learning
+Since you're learning on a laptop, you'll primarily work with simulation environments. We've designed the course to provide equivalent learning experiences through Gazebo and Unity simulations.
+</ConditionalContent>
+
+<ConditionalContent forHardware={['mobile']} className="hint">
+### Mobile Learning
+You can access course content on your mobile device for review and theoretical study, but practical exercises will require a laptop or desktop computer.
+</ConditionalContent>
+
 ### Getting Started
 
 Navigate through the course using the sidebar to begin your journey into Physical AI and Humanoid Robotics:
