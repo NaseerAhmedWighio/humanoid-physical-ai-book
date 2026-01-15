@@ -1,0 +1,153 @@
+openapi: 3.0.0
+info:
+  title: User Preferences API
+  description: API for managing user preferences including hardware preferences and personalization settings
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+paths:
+  /api/user/preferences:
+    get:
+      summary: Get user preferences
+      description: Retrieve the current user's preferences including hardware preferences and personalization settings
+      responses:
+        '200':
+          description: User preferences retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: User ID
+                    example: "user_12345"
+                  email:
+                    type: string
+                    description: User's email address
+                    example: "user@example.com"
+                  has_mobile:
+                    type: boolean
+                    description: Whether user has mobile device access
+                    example: true
+                  has_laptop:
+                    type: boolean
+                    description: Whether user has laptop/computer access
+                    example: true
+                  has_physical_robot:
+                    type: boolean
+                    description: Whether user has physical robot access
+                    example: false
+                  has_other_hardware:
+                    type: string
+                    description: Description of other hardware user has access to
+                    example: "Raspberry Pi development kit"
+                  web_dev_experience:
+                    type: string
+                    description: User's web development experience level
+                    enum: [beginner, intermediate, experienced, expert]
+                    example: "intermediate"
+                  language_preference:
+                    type: string
+                    description: User's preferred language
+                    enum: [en, ur]
+                    example: "en"
+                  personalization_enabled:
+                    type: boolean
+                    description: Whether personalization is currently enabled
+                    example: true
+        '401':
+          description: Unauthorized - user not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                    example: "Authentication required"
+    put:
+      summary: Update user preferences
+      description: Update the current user's preferences including hardware preferences and personalization settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                has_mobile:
+                  type: boolean
+                  description: Whether user has mobile device access
+                  example: true
+                has_laptop:
+                  type: boolean
+                  description: Whether user has laptop/computer access
+                  example: true
+                has_physical_robot:
+                  type: boolean
+                  description: Whether user has physical robot access
+                  example: false
+                has_other_hardware:
+                  type: string
+                  description: Description of other hardware user has access to
+                  example: "Raspberry Pi development kit"
+                web_dev_experience:
+                  type: string
+                  description: User's web development experience level
+                  enum: [beginner, intermediate, experienced, expert]
+                  example: "intermediate"
+                language_preference:
+                  type: string
+                  description: User's preferred language
+                  enum: [en, ur]
+                  example: "ur"
+                personalization_enabled:
+                  type: boolean
+                  description: Whether personalization should be enabled
+                  example: false
+              required:
+                - has_mobile
+                - has_laptop
+                - has_physical_robot
+                - web_dev_experience
+      responses:
+        '200':
+          description: User preferences updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Whether the update was successful
+                    example: true
+                  message:
+                    type: string
+                    description: Success message
+                    example: "User preferences updated successfully"
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                    example: "Invalid experience level provided"
+        '401':
+          description: Unauthorized - user not authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                    example: "Authentication required"

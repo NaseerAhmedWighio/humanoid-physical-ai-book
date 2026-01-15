@@ -1,0 +1,21 @@
+{
+  "name": "humanoid-ai-book",
+  "version": "1.0.0",
+  "description": "Physical AI & Humanoid Robotics Textbook",
+  "scripts": {
+    "frontend": "cd frontend && npm run start",
+    "frontend:build": "cd frontend && npm run build",
+    "backend": "cd backend && python -m uvicorn src.main:app --reload",
+    "backend:prod": "cd backend && python -m uvicorn src.main:app --host 0.0.0.0 --port 8000",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "install:frontend": "cd frontend && npm install",
+    "install:backend": "cd backend && pip install -r requirements.txt",
+    "install": "npm run install:frontend && npm run install:backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "keywords": ["ai", "robotics", "textbook", "education"],
+  "author": "Naseer Ahmed",
+  "license": "MIT"
+}

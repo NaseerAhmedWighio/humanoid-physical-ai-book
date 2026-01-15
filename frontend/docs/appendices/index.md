@@ -19,3 +19,4 @@ Welcome to the appendices for the Physical AI & Humanoid Robotics textbook. This
 - [Appendix H: Ethics in Robotics](./ethics.md) - Ethical considerations in humanoid robotics development
 - [Appendix I: Glossary](./glossary.md) - Definitions of key terms and concepts
 - [Appendix J: Additional Resources](./additional-resources.md) - Links to external resources and further reading
+- [Appendix K: Conditional Content Guide](./conditional-content.md) - How personalized content adapts to your profile

@@ -1,0 +1,83 @@
+/* Auth buttons container - ensure horizontal layout */
+.navbar__item .navbar__auth-buttons,
+.navbar__auth-buttons {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 0.5rem !important;
+  flex-wrap: nowrap !important;
+  scale: 1.2;
+  margin-right: 10px;
+}
+
+/* Ensure buttons maintain horizontal layout */
+.navbar__item .navbar__auth-buttons .button,
+.navbar__auth-buttons .button {
+  margin: 0 !important;
+  font-size: 0.8rem !important;
+  padding: 0.3rem 0.8rem !important;
+  color: var(--ifm-font-color-base) !important;
+  flex: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Ensure proper layout for user profile container */
+.navbar__item .user-profile-container {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  cursor: pointer;
+}
+
+/* User avatar styling */
+.navbar__item .user-avatar {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-light) 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: bold !important;
+  font-size: 0.9rem !important;
+  color: white !important;
+}
+
+/* User name styling */
+.navbar__item .user-name {
+  font-weight: 500 !important;
+  margin-right: 0.25rem !important;
+}
+
+/* Dropdown arrow styling */
+.navbar__item .dropdown-arrow {
+  font-size: 0.8rem !important;
+}
+
+/* Subtle link styling */
+.navbar__item .navbar__link--subtle {
+  cursor: pointer;
+  text-decoration: none !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Dropdown link styling */
+.navbar__item .dropdown__link {
+  cursor: pointer;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* Ensure no interference from other flex properties */
+.navbar__item .navbar__auth-buttons > *,
+.navbar__auth-buttons > * {
+  flex: none !important;
+  min-width: unset !important;
+  max-width: unset !important;
+}

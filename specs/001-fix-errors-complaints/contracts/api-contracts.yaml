@@ -1,0 +1,63 @@
+# API Contracts for Fix Errors and Complaints Feature
+
+## Personalization API
+
+### GET /api/personalization/content/{contentId}
+Get personalized content based on user preferences
+
+**Request**:
+- Path parameter: contentId (string)
+- Query parameter: hardwarePreference (optional, string)
+
+**Response**:
+- 200: {content: string, isPersonalized: boolean}
+- 404: Content not found
+- 500: Server error
+
+### POST /api/personalization/toggle
+Toggle personalization on/off for the current user
+
+**Request**:
+- Body: {enabled: boolean}
+
+**Response**:
+- 200: {success: boolean, personalizationEnabled: boolean}
+- 401: Unauthorized
+- 500: Server error
+
+## Chatbot API
+
+### POST /api/chat/conversation
+Create a new conversation or continue existing one
+
+**Request**:
+- Body: {message: string, conversationId: string (optional)}
+
+**Response**:
+- 200: {conversationId: string, response: string, timestamp: string}
+- 400: Invalid request
+- 500: Server error
+
+### GET /api/chat/conversation/{conversationId}
+Get conversation history
+
+**Request**:
+- Path parameter: conversationId (string)
+
+**Response**:
+- 200: {messages: array, lastUpdated: string}
+- 404: Conversation not found
+- 500: Server error
+
+## Search API
+
+### GET /api/search
+Search content with query parameters
+
+**Request**:
+- Query parameters: q (string), limit (number, optional), offset (number, optional)
+
+**Response**:
+- 200: {results: array, total: number, query: string}
+- 400: Invalid query
+- 500: Server error

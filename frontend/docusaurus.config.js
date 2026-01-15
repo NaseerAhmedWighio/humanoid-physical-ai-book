@@ -1,22 +1,23 @@
 // @ts-check
 import {themes as prismThemes} from 'prism-react-renderer';
+require('dotenv').config();
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Physical AI & Humanoid Robotics Textbook',
   tagline: 'AI-native textbook for 13-week course on humanoid robotics',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.png',
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://humanoid-physical-ai-robotics-textb.vercel.app/',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'Humanoid Robotics Textbook', // Usually your GitHub org/user name.
+  projectName: 'AI Textbook', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -39,7 +40,10 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/NaseerAhmedWighio/humanoid-physical-ai-book',
+          remarkPlugins: [
+            // Add any remark plugins if needed
+          ],
         },
         blog: false, // Disable blog for textbook
         theme: {
@@ -47,6 +51,10 @@ const config = {
         },
       }),
     ],
+  ],
+
+  themes: [
+    // Add any custom themes here
   ],
 
 
@@ -70,10 +78,22 @@ const config = {
             label: 'Textbook',
           },
           {
-            href: 'https://github.com/facebook/docusaurus',
-            label: 'GitHub',
+            type: 'custom-page-controls',
+            position: 'right', // Will be styled to appear centered
+          },
+          {
+            type: 'custom-search-button',
             position: 'right',
           },
+          {
+            type: 'custom-auth-buttons',
+            position: 'right',
+          },
+          // {
+          //   href: 'https://github.com/NaseerAhmedWighio',
+          //   label: 'GitHub',
+          //   position: 'right',
+          // },
         ],
       },
       footer: {
@@ -127,6 +147,31 @@ const config = {
         darkTheme: prismThemes.dracula,
       },
     }),
+
+  // Add custom fields to make API URL available to components
+  customFields: {
+    apiBaseUrl: process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000',
+  },
+
+  // Enable environment variables for client using DefinePlugin
+  plugins: [
+    function(context, options) {
+      return {
+        name: 'webpack-define-env-plugin',
+        configureWebpack(config, isServer, utils) {
+          const { DefinePlugin } = require('webpack');
+
+          return {
+            plugins: [
+              new DefinePlugin({
+                'process.env.REACT_APP_API_BASE_URL': JSON.stringify(process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000'),
+              }),
+            ],
+          };
+        },
+      };
+    },
+  ],
 };
 
 export default config;

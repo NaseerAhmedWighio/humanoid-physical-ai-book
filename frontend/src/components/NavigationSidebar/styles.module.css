@@ -5,8 +5,10 @@
   background-color: #f9fafb;
   border-radius: 8px;
   height: fit-content;
+
   position: sticky;
-  top: 2rem;
+  top: 1rem;          /* distance from top */
+  align-self: flex-start;
 }
 
 .courseTitle {

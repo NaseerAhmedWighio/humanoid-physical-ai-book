@@ -7,6 +7,7 @@ function WeeklyContent({ weekId }) {
   const [week, setWeek] = useState(null);
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [completedSubtopics, setCompletedSubtopics] = useState(new Set());
 
   useEffect(() => {
     // In a real implementation, this would fetch from the backend API
@@ -59,6 +60,16 @@ function WeeklyContent({ weekId }) {
     }, 500);
   }, [weekId]);
 
+  const toggleSubtopicCompletion = (index) => {
+    const newCompleted = new Set(completedSubtopics);
+    if (newCompleted.has(index)) {
+      newCompleted.delete(index);
+    } else {
+      newCompleted.add(index);
+    }
+    setCompletedSubtopics(newCompleted);
+  };
+
   if (loading) {
     return (
       <div className={styles.weeklyContent}>
@@ -108,9 +119,17 @@ function WeeklyContent({ weekId }) {
         <h2>Subtopics</h2>
         <ul className={styles.subtopicsList}>
           {week.subtopics.map((subtopic, index) => (
-            <li key={index} className={styles.subtopicItem}>
-              <span className={styles.subtopicBullet}>•</span>
-              {subtopic}
+            <li key={index} className={`${styles.subtopicItem} ${completedSubtopics.has(index) ? styles.completed : ''}`}>
+              <label className={styles.checkboxContainer}>
+                <input
+                  type="checkbox"
+                  checked={completedSubtopics.has(index)}
+                  onChange={() => toggleSubtopicCompletion(index)}
+                  className={styles.checkboxInput}
+                />
+                <span className={styles.checkmark}></span>
+              </label>
+              <span className={styles.subtopicText}>{subtopic}</span>
             </li>
           ))}
         </ul>

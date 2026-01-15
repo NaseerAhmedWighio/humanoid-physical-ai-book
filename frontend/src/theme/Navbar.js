@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '@theme-original/Navbar';
 import SearchModal from '@site/src/components/SearchModal';
+// import TranslateButton from '@site/src/components/TranslateButton';
+import { useBetterAuth } from '@site/src/context/BetterAuthContext';
+import { useLocation } from '@docusaurus/router';
+import './Navbar.css';
 
 export default function NavbarWrapper(props) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { user, loading } = useBetterAuth();
+  const location = useLocation();
 
   useEffect(() => {
     const handleKeyDown = (e) => {

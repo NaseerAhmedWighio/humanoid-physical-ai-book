@@ -1,0 +1,86 @@
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.profile-pic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-initials {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #007bff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.user-email {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.logout-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #dc3545;
+}
+
+/* Dark mode support */
+html[data-theme="dark"] .user-profile {
+  background: rgba(26, 26, 46, 0.8);
+}
+
+html[data-theme="dark"] .user-email {
+  color: #a0aec0;
+}
+
+html[data-theme="dark"] .logout-btn {
+  color: #a0aec0;
+}
+
+html[data-theme="dark"] .logout-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fc8181;
+}

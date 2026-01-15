@@ -342,3 +342,316 @@ html[data-theme='light'] .theme-doc-sidebar-container::-webkit-scrollbar-thumb:h
 .footer__link-item:hover {
   color: var(--ifm-color-primary) !important;
 }
+/* 1️⃣ REMOVE ALL NAVBAR SEPARATORS */
+.navbar,
+.navbar__inner,
+.navbar__items,
+.navbar__items--right {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* 2️⃣ KILL ANY ::after / ::before LINE */
+.navbar::after,
+.navbar__inner::after,
+.search-header::after,
+.search-input-container::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* 3️⃣ REMOVE SEARCH HEADER BORDER COMPLETELY */
+.search-header {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* 4️⃣ FIX SEARCH INPUT SHADOW BLEED */
+.search-input {
+  height: 34px;
+  line-height: 34px;
+  padding: 0 2.2rem 0 0.75rem;
+  box-shadow: none;
+}
+
+/* glow only on focus (not leaking down) */
+.search-input:focus {
+  box-shadow:
+    0 0 0 2px rgba(0, 238, 255, 0.25),
+    0 0 6px rgba(0, 238, 255, 0.4);
+}
+
+/* 5️⃣ REMOVE ANY HR INSIDE NAVBAR (just in case) */
+.navbar hr {
+  display: none !important;
+}
+
+/* 1️⃣ NAVBAR CONTENT PERFECT CENTER */
+.navbar__inner {
+  display: flex !important;
+  align-items: center !important;   /* ✅ vertical center */
+  min-height: 56px;                 /* ✅ standard navbar height */
+}
+
+/* 2️⃣ RIGHT & LEFT ITEMS CENTER */
+.navbar__items,
+.navbar__items--right,
+.navbar__items--left {
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* 3️⃣ SEARCH WRAPPER CENTER FIX */
+.search-header {
+  display: flex;
+  align-items: center;              /* ✅ center input */
+  height: 56px;                     /* ✅ match navbar */
+}
+
+
+:root {
+  --ifm-navbar-height: 70px;
+}
+
+/* 1️⃣ FORCE ALL NAVBAR ITEMS SAME BASELINE */
+.navbar__items--right > * {
+  display: flex;
+  align-items: center;
+}
+
+/* 2️⃣ SEARCH HEADER HEIGHT = NAVBAR HEIGHT */
+.search-header {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* 3️⃣ SEARCH INPUT PERFECT CENTER */
+.search-input {
+  height: 34px;
+  width: 200px;
+  line-height: 34px;
+  margin: 0;
+  transform: translateY(7px); /* 🔥 micro alignment fix */
+}
+
+/* 4️⃣ REMOVE ANY TOP OFFSET */
+.search-input-container {
+  display: flex;
+  align-items: center;
+  top: 0;
+}
+
+/* 5️⃣ ENSURE BUTTONS DON'T SHIFT */
+.navbar__item,
+.navbar__link,
+.navbar__brand {
+  display: flex;
+  align-items: center;
+}
+
+/* Fix doc-toc positioning - ensure it appears on the right side of the content */
+@media (min-width: 997px) {
+  .theme-doc-toc-desktop {
+    position: sticky;
+    top: 4rem;
+    align-items: initial;
+    align-self: flex-start;
+    height: fit-content;
+  }
+
+  .col--3 {
+    flex: 0 0 25%;
+  }
+
+  .col--9 {
+    flex: 0 0 75%;
+  }
+
+  .theme-doc-sidebar-container {
+    display: flex;
+    flex-direction: row;
+    position: sticky;
+    align-items: initial;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+}
+
+/* Fix content layout to prevent TOC from being pushed to bottom */
+.docPage,
+.theme-doc-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px; 
+  gap: 2rem;
+  max-width: 100%;
+}
+
+/* Ensure proper spacing for TOC */
+.theme-doc-toc {
+  position: sticky;
+  top: 1rem;
+  align-self: start;
+  height: fit-content;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+/* Fix for mobile view */
+@media (max-width: 996px) {
+  .docPage,
+  .theme-doc-page {
+    grid-template-columns: 1fr; /* Stack on mobile */
+  }
+
+  .theme-doc-toc {
+    position: static;
+    max-height: none;
+    margin-top: 1rem;
+  }
+}
+
+
+/* Urdu translation styles - keep layout LTR but change text direction */
+.urdu-translation {
+  font-family: 'Jameel Noori Nastaleeq', 'Urdu Typesetting', 'Segoe UI', sans-serif;
+}
+
+/* Only change text direction for content elements, keep layout LTR */
+.urdu-translation h1,
+.urdu-translation h2,
+.urdu-translation h3,
+.urdu-translation h4,
+.urdu-translation h5,
+.urdu-translation h6,
+.urdu-translation p,
+.urdu-translation div,
+.urdu-translation span,
+.urdu-translation li,
+.urdu-translation td,
+.urdu-translation th {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Keep layout elements LTR to maintain original structure */
+.urdu-translation .navbar,
+.urdu-translation .menu,
+.urdu-translation .footer,
+.urdu-translation .container,
+.urdu-translation .row,
+.urdu-translation .col,
+.urdu-translation .card,
+.urdu-translation .table-wrapper,
+.urdu-translation .theme-doc-toc,
+.urdu-translation .main-wrapper {
+  direction: ltr !important;
+}
+
+/* Translate sidebar content but keep layout structure */
+.urdu-translation .sidebar,
+.urdu-translation .theme-doc-sidebar-container {
+  direction: ltr !important; /* Keep sidebar layout LTR */
+}
+
+/* But translate the text content within sidebars */
+.urdu-translation .sidebar h1,
+.urdu-translation .sidebar h2,
+.urdu-translation .sidebar h3,
+.urdu-translation .sidebar h4,
+.urdu-translation .sidebar h5,
+.urdu-translation .sidebar h6,
+.urdu-translation .sidebar p,
+.urdu-translation .sidebar div,
+.urdu-translation .sidebar span,
+.urdu-translation .sidebar li,
+.urdu-translation .theme-doc-sidebar-container h1,
+.urdu-translation .theme-doc-sidebar-container h2,
+.urdu-translation .theme-doc-sidebar-container h3,
+.urdu-translation .theme-doc-sidebar-container h4,
+.urdu-translation .theme-doc-sidebar-container h5,
+.urdu-translation .theme-doc-sidebar-container h6,
+.urdu-translation .theme-doc-sidebar-container p,
+.urdu-translation .theme-doc-sidebar-container div,
+.urdu-translation .theme-doc-sidebar-container span,
+.urdu-translation .theme-doc-sidebar-container li {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Ensure page controls maintain their position */
+.urdu-translation .page-controls {
+  direction: ltr !important;
+}
+
+/* Override any RTL direction on layout elements */
+.urdu-translation .navbar__inner,
+.urdu-translation .navbar__items,
+.urdu-translation .navbar__items--right,
+.urdu-translation .navbar__items--left,
+.urdu-translation .menu__list,
+.urdu-translation .menu__link {
+  direction: ltr !important;
+}
+
+/* Fix for sidebar and content layout */
+.docPage,
+.theme-doc-page {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 300px; /* main content + TOC */
+  gap: 2rem;
+  max-width: 100%;
+}
+
+
+/* Ensure proper sidebar behavior */
+@media (min-width: 997px) {
+  .theme-doc-sidebar-container {
+    position: sticky !important;
+    top: 1rem; /* Reduced from 4rem to 1rem */
+    align-self: flex-start;
+    height: calc(100vh - 2rem); /* Use calculated height to allow scrolling */
+    overflow-y: auto;
+  }
+}
+
+/* Text Highlighter Tooltip Styles */
+.text-highlighter-tooltip {
+  position: absolute;
+  background-color: #007bff;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  z-index: 10000;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  min-width: 100px;
+  text-align: center;
+}
+
+.text-highlighter-tooltip button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0;
+  margin: 0;
+  text-decoration: underline;
+  outline: none;
+  background: transparent;
+}
+
+.text-highlighter-tooltip button:hover {
+  text-decoration: none;
+  opacity: 0.9;
+}

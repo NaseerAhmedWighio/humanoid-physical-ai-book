@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from '@docusaurus/router';
+import axios from 'axios';
+import { API_BASE_URL } from '../constants/api';
 import './SearchModal.css';
 
 const SearchModal = ({ isOpen, onClose }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef(null);
   const location = useLocation();
 
-  // Search data - topics from the website
+  // Search data - topics from the website (fallback for non-content search)
   const searchTopics = {
     modules: [
       { title: 'Module 1: Introduction to ROS 2', path: '/docs/module-1-ros2' },
@@ -41,8 +45,67 @@ const SearchModal = ({ isOpen, onClose }) => {
     ]
   };
 
-  // Filter search results based on query and category
-  const getFilteredResults = () => {
+  // Search content using backend API
+  const searchContent = async (query) => {
+    if (!query.trim()) {
+      // If no query, show category-based results
+      setSearchResults([]);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/content/search`, {
+        query: query,
+        limit: 20
+      });
+
+      // Format the search results from the API
+      const formattedResults = response.data.results.map((result, index) => {
+        // Extract path and title from the content metadata
+        let path = '/docs/intro'; // default fallback
+        let title = result.content || `Search result ${index + 1}`;
+
+        // Try to extract path from metadata
+        if (result.metadata && result.metadata.url) {
+          path = result.metadata.url;
+        } else if (result.metadata && result.metadata.path) {
+          path = result.metadata.path;
+        }
+
+        // Create a title from the content if not available
+        if (!result.metadata?.title && result.content) {
+          title = result.content.substring(0, 100) + (result.content.length > 100 ? '...' : '');
+        } else if (result.metadata?.title) {
+          title = result.metadata.title;
+        }
+
+        return {
+          title: title,
+          path: path,
+          content: result.content,
+          score: result.score || 0
+        };
+      });
+
+      setSearchResults(formattedResults);
+    } catch (error) {
+      console.error('Search error:', error);
+      // Fallback to local search if API fails
+      try {
+        const fallbackResults = getFilteredResults(query);
+        setSearchResults(fallbackResults);
+      } catch (fallbackError) {
+        console.error('Fallback search error:', fallbackError);
+        setSearchResults([]);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Filter search topics based on query and category (fallback)
+  const getFilteredResults = (query = searchQuery) => {
     let results = [];
 
     if (selectedCategory === 'all' || selectedCategory === 'modules') {
@@ -58,14 +121,36 @@ const SearchModal = ({ isOpen, onClose }) => {
       results = [...results, ...searchTopics.concepts];
     }
 
-    if (searchQuery.trim()) {
+    if (query.trim()) {
       results = results.filter(item =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+        item.title.toLowerCase().includes(query.toLowerCase())
       );
     }
 
     return results;
   };
+
+  // Handle search query changes
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchQuery.trim()) {
+        searchContent(searchQuery);
+      } else {
+        setSearchResults([]);
+      }
+    }, 300); // 300ms delay to avoid excessive API calls
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery]);
+
+  // Handle category changes
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      // Only apply category filtering when there's no search query
+      const results = getFilteredResults();
+      setSearchResults(results);
+    }
+  }, [selectedCategory, searchQuery]);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -94,24 +179,33 @@ const SearchModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const filteredResults = getFilteredResults();
+  // Use search results if available, otherwise use filtered results
+  const displayResults = searchResults.length > 0 ? searchResults : getFilteredResults();
 
   return (
     <div className="search-modal-overlay" onClick={onClose}>
       <div className="search-modal" onClick={(e) => e.stopPropagation()}>
         <div className="search-header">
-          <input
-            ref={inputRef}
-            type="text"
-            className="search-input"
-            placeholder="Search topics, modules, weeks..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onClick={(e) => e.stopPropagation()}
-          />
-          <button className="search-close" onClick={onClose}>
+          <div className="search-input-container">
+            <input
+              ref={inputRef}
+              type="text"
+              className="search-input"
+              placeholder="Search the textbook content..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+            />
+            <div className="search-shortcut">
+              <kbd>Ctrl</kbd>
+              <span>+</span>
+              <kbd>K</kbd>
+            </div>
+              <button className="search-close" onClick={onClose}>
             ×
           </button>
+          </div>
+        
         </div>
 
         <div className="search-filters">
@@ -148,21 +242,39 @@ const SearchModal = ({ isOpen, onClose }) => {
         </div>
 
         <div className="search-results">
-          {filteredResults.length > 0 ? (
-            filteredResults.map((item, index) => (
-              <a
-                key={index}
-                href={item.path}
-                className="search-result-item"
-                onClick={onClose}
-              >
-                <div className="search-result-title">{item.title}</div>
-                <div className="search-result-path">{item.path}</div>
-              </a>
-            ))
-          ) : (
+          {isLoading ? (
+            <div className="search-loading">
+              <div className="loading-spinner"></div>
+              <div>Searching content...</div>
+            </div>
+          ) : displayResults.length > 0 ? (
+            displayResults.map((item, index) => {
+              // Create a stable key based on content to avoid DOM reconciliation issues
+              const resultKey = item.path + (item.title || '').substring(0, 20) + index;
+              return (
+                <a
+                  key={resultKey}
+                  href={item.path}
+                  className="search-result-item"
+                  onClick={onClose}
+                >
+                  <div className="search-result-title">{item.title}</div>
+                  <div className="search-result-path">{item.path}</div>
+                  {item.content && (
+                    <div className="search-result-preview">
+                      {item.content.substring(0, 150)}...
+                    </div>
+                  )}
+                </a>
+              );
+            })
+          ) : searchQuery.trim() ? (
             <div className="search-no-results">
               No results found for "{searchQuery}"
+            </div>
+          ) : (
+            <div className="search-no-results">
+              Start typing to search the textbook content
             </div>
           )}
         </div>

@@ -1,0 +1,38 @@
+.page-controls {
+  position: static;
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.controls-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  /* background: rgba(26, 26, 46, 0.8);
+  backdrop-filter: blur(10px); */
+  border-radius: 8px;
+  padding: 0.5rem;
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); */
+}
+
+.personalization-control,
+.translate-control {
+  display: inline-block;
+}
+
+/* Adjust for mobile */
+@media (max-width: 768px) {
+  .page-controls {
+    position: sticky;
+    top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .controls-wrapper {
+    justify-content: center;
+    width: 100%;
+    padding: 0.75rem;
+  }
+}

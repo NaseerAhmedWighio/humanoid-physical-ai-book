@@ -26,7 +26,7 @@ function HomepageHeader() {
               </p>
               <div className="hero-buttons">
                 <Link
-                  className="button button--secondary button--lg"
+                  className="button button--secondary1 button--lg"
                   to="/docs/intro">
                   Get Started
                 </Link>
@@ -50,19 +50,19 @@ function HomepageHeader() {
 
           {/* Tags Section */}
           <div className="hero-tags">
-            <span className="tag">ROS 2</span>
-            <span className="tag">Humanoid Robotics</span>
-            <span className="tag">Physical AI</span>
-            <span className="tag">Simulation</span>
-            <span className="tag">NVIDIA Isaac</span>
-            <span className="tag">Vision Language Action</span>
-            <span className="tag">Machine Learning</span>
-            <span className="tag">Human-Robot Interaction</span>
+            <span className="tag1">ROS 2</span>
+            <span className="tag1">Humanoid Robotics</span>
+            <span className="tag1">Physical AI</span>
+            <span className="tag1">Simulation</span>
+            <span className="tag1">NVIDIA Isaac</span>
+            <span className="tag1">Vision Language Action</span>
+            <span className="tag1">Machine Learning</span>
+            <span className="tag1">Human-Robot Interaction</span>
           </div>
         </div>
       </header>
       {/* Tabs Section */}
-      <section className="tabs-section">
+      {/* <section className="tabs-section">
         <div className="container">
           <div className="tabs-container">
             <div className="tabs-header">
@@ -80,7 +80,7 @@ function HomepageHeader() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
     </>
   );
 }
@@ -90,7 +90,7 @@ export default function Home() {
 
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
+      title={`${siteConfig.title}`}
       description="Physical AI & Humanoid Robotics Textbook - Comprehensive 13-week course">
       <HomepageHeader />
       <main>
